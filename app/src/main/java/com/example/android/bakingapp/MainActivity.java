@@ -1,6 +1,8 @@
 package com.example.android.bakingapp;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -14,6 +16,7 @@ import com.example.android.bakingapp.models.Recipe;
 import com.example.android.bakingapp.utilities.NetworkUtils;
 import com.example.android.bakingapp.utilities.RecipeJsonUtils;
 
+import java.net.URI;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>  {
@@ -61,6 +64,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     String recipeResults = NetworkUtils.getResponseFromHttpUrl(url);
                     Recipe[] recipes = RecipeJsonUtils.convertJsonToRecipes(recipeResults);
                     Log.d("results", String.valueOf(recipes.length));
+                    int insertedRows = 0;
+//                    TODO clear the db before this? or check if each one is already in there
+
+                    for (int i = 0; i < recipes.length; i++){
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_ID, recipes[i].getId());
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_NAME, recipes[i].getName());
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_IMAGE, recipes[i].getImage());
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_SERVINGS, recipes[i].getServings());
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_INGREDIENTS, RecipeJsonUtils.convertObjectArrayToJsonString(recipes[i].getIngredients()));
+                        contentValues.put(RecipesContract.RecipesEntry.COLUMN_RECIPE_STEPS, RecipeJsonUtils.convertObjectArrayToJsonString(recipes[i].getSteps()));
+
+                        Uri returnUri = getContentResolver().insert(RecipesContract.RecipesEntry.CONTENT_URI, contentValues);
+                        if (returnUri != null){
+                            insertedRows++;
+                        }
+                    }
+
+                    results = getContentResolver().query(RecipesContract.RecipesEntry.CONTENT_URI,null, null, null, null);
+
                 } catch (Exception e){
                     e.printStackTrace();
                 }

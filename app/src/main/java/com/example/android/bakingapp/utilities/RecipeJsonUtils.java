@@ -6,6 +6,7 @@ import com.example.android.bakingapp.models.IngredientSpecification;
 import com.example.android.bakingapp.models.MeasurementType;
 import com.example.android.bakingapp.models.Recipe;
 import com.example.android.bakingapp.models.RecipeStep;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -97,5 +98,17 @@ public class RecipeJsonUtils {
             recipeSteps[i] = step;
         }
         return recipeSteps;
+    }
+
+    public static String convertObjectArrayToJsonString(IngredientSpecification[] ingredients){
+        Gson gson = new Gson();
+        String json = gson.toJson(ingredients);
+        return json;
+    }
+
+    public static String convertObjectArrayToJsonString(RecipeStep[] steps){
+        Gson gson = new Gson();
+        String json = gson.toJson(steps);
+        return json;
     }
 }
