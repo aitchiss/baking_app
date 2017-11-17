@@ -12,5 +12,26 @@ public enum MeasurementType {
     K,
     G,
     OZ,
-    UNIT
+    UNIT;
+
+    public static MeasurementType getType(String typeName) {
+        switch (typeName.toLowerCase()){
+            case "cup":
+                return CUP;
+            case "tblsp":
+                return TBLSP;
+            case "tsp":
+                return TSP;
+            case "k":
+                return K;
+            case "g":
+                return G;
+            case "oz":
+                return OZ;
+            case "unit":
+                return UNIT;
+            default:
+                return UNIT;
+        }
+    }
 }

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class RecipesDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "recipes.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public RecipesDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -24,7 +24,9 @@ public class RecipesDbHelper extends SQLiteOpenHelper {
                 RecipesContract.RecipesEntry.COLUMN_RECIPE_ID + " INTEGER NOT NULL, " +
                 RecipesContract.RecipesEntry.COLUMN_RECIPE_NAME + " TEXT, " +
                 RecipesContract.RecipesEntry.COLUMN_RECIPE_INGREDIENTS + " TEXT, " +
-                RecipesContract.RecipesEntry.COLUMN_RECIPE_STEPS + " TEXT)";
+                RecipesContract.RecipesEntry.COLUMN_RECIPE_STEPS + " TEXT, " +
+                RecipesContract.RecipesEntry.COLUMN_RECIPE_SERVINGS + " INTEGER, " +
+                RecipesContract.RecipesEntry.COLUMN_RECIPE_IMAGE + " TEXT)";
 
         sqLiteDatabase.execSQL(SQL_CREATE_RECIPES_TABLE);
     }

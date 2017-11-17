@@ -10,6 +10,8 @@ public class Recipe {
     private  String name;
     private RecipeStep[] steps;
     private IngredientSpecification[] ingredients;
+    private int servings;
+    private String image;
 
     public Recipe(int id, String name){
         this.id = id;
@@ -46,5 +48,21 @@ public class Recipe {
 
     public void setIngredients(IngredientSpecification[] ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public int getServings() {
+        return servings;
+    }
+
+    public void setServings(int servings) {
+        this.servings = servings;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

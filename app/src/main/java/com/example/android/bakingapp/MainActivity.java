@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.View;
 
 import com.example.android.bakingapp.db.RecipesContract;
+import com.example.android.bakingapp.models.Recipe;
 import com.example.android.bakingapp.utilities.NetworkUtils;
+import com.example.android.bakingapp.utilities.RecipeJsonUtils;
 
 import java.net.URL;
 
@@ -57,7 +59,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Cursor results = null;
                 try{
                     String recipeResults = NetworkUtils.getResponseFromHttpUrl(url);
-                    Log.d("results", recipeResults);
+                    Recipe[] recipes = RecipeJsonUtils.convertJsonToRecipes(recipeResults);
+                    Log.d("results", String.valueOf(recipes.length));
                 } catch (Exception e){
                     e.printStackTrace();
                 }
