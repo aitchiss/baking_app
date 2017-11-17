@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by suzanneaitchison on 14/11/2017.
@@ -59,9 +60,14 @@ public class RecipesContentProvider extends ContentProvider {
                 long id = db.insert(RecipesContract.RecipesEntry.TABLE_NAME, null, contentValues);
                 if (id > 0){
                     returnUri = ContentUris.withAppendedId(RecipesContract.RecipesEntry.CONTENT_URI, id);
+                    Log.d("Provider: ", String.valueOf(id));
+                } else {
+                    returnUri = null;
+                    throw new UnsupportedOperationException("Unknown Uri: " + uri);
                 }
                 break;
             default:
+                returnUri = null;
                 throw new UnsupportedOperationException("Unknown Uri: " + uri);
         }
 
