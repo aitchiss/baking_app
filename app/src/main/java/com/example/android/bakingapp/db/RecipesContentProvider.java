@@ -37,8 +37,19 @@ public class RecipesContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] columns, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String orderBy) {
+        final SQLiteDatabase db = mRecipesDbHelper.getReadableDatabase();
+        int match = sUriMatcher.match(uri);
+        Cursor recipes;
+        switch(match){
+            case RECIPES:
+                recipes = db.query(RecipesContract.RecipesEntry.TABLE_NAME, columns, selection, selectionArgs, null, null, orderBy);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown Uri: " + uri);
+        }
+
+        return recipes;
     }
 
     @Nullable
@@ -60,7 +71,6 @@ public class RecipesContentProvider extends ContentProvider {
                 long id = db.insert(RecipesContract.RecipesEntry.TABLE_NAME, null, contentValues);
                 if (id > 0){
                     returnUri = ContentUris.withAppendedId(RecipesContract.RecipesEntry.CONTENT_URI, id);
-                    Log.d("Provider: ", String.valueOf(id));
                 } else {
                     returnUri = null;
                     throw new UnsupportedOperationException("Unknown Uri: " + uri);

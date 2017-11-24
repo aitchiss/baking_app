@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -14,6 +15,7 @@ import android.view.View;
 import com.example.android.bakingapp.db.RecipesContract;
 import com.example.android.bakingapp.models.Recipe;
 import com.example.android.bakingapp.utilities.NetworkUtils;
+import com.example.android.bakingapp.utilities.RecipeCursorUtils;
 import com.example.android.bakingapp.utilities.RecipeJsonUtils;
 
 import java.net.URI;
@@ -28,6 +30,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadRecipeData();
+
+        RecipeListFragment recipeListFragment = new RecipeListFragment();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .add(R.id.recipe_list_container, recipeListFragment)
+                .commit();
     }
 
 
@@ -63,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 try{
                     String recipeResults = NetworkUtils.getResponseFromHttpUrl(url);
                     Recipe[] recipes = RecipeJsonUtils.convertJsonToRecipes(recipeResults);
-                    Log.d("results", String.valueOf(recipes.length));
                     int insertedRows = 0;
 //                    TODO clear the db before this? or check if each one is already in there
 
@@ -83,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     }
 
                     results = getContentResolver().query(RecipesContract.RecipesEntry.CONTENT_URI,null, null, null, null);
+                    Log.d("cursor returns: ", String.valueOf(results.getCount()));
+                    Recipe[] newRecipes = RecipeCursorUtils.getRecipesFromCursor(results);
 
                 } catch (Exception e){
                     e.printStackTrace();
